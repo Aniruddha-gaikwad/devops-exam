@@ -47,7 +47,7 @@ resource "aws_security_group" "lambda_sg" {
   }
 }
 
-resource "aws_lambda_function" "my_lambda" {
+resource "aws_lambda_function" "my_lambda2" {
   function_name = "MyLambdaFunction"
   filename =  "./lambda_function.zip"
   handler       = "lambda_function.lambda_handler"  
