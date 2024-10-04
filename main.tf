@@ -47,8 +47,26 @@ resource "aws_security_group" "lambda_sg" {
   }
 }
 
+resource "aws_lambda_function" "my_lambda" {
+  function_name = "MyLambdaFunction"
+  filename =  "./lambda_function.zip"
+  handler       = "lambda_function.lambda_handler"  
+  runtime       = "python3.8"  
+
+  role = data.aws_iam_role.lambda.arn
+
+  vpc_config {
+    subnet_ids         = [aws_subnet.private_subnet.id]
+    security_group_ids = [aws_security_group.lambda_sg.id]
+
+    
+  }
+
+  source_code_hash = filebase64sha256("lambda_function.zip")  
+}
+
 resource "aws_lambda_function" "my_lambda2" {
-  function_name = "MyLambdaFunction2"
+  function_name = "MyLambdaFunction"
   filename =  "./lambda_function.zip"
   handler       = "lambda_function.lambda_handler"  
   runtime       = "python3.8"  
