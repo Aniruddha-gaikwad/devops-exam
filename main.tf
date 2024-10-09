@@ -62,10 +62,11 @@ resource "aws_lambda_function" "my_lambda" {
     
   }
 
-  source_code_hash = filebase64sha256("lambda_function.zip")  
+  /*source_code_hash = filebase64sha256("lambda_function.zip")  
     lifecycle {
     create_before_destroy = true
   }
+  */
 }
 
 #done
