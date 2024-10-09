@@ -40,14 +40,20 @@ pipeline {
       stage('Invoke Lambda') {
             steps {
                 script {
+            // Invoke the Lambda function
+            def result = sh(script: 'aws lambda invoke --function-name my_lambda --log-type Tail lambda_output.txt --output json', returnStdout: true)
+            
+            // Print the result for debugging
+            echo result
 
-                    //sh 'aws lambda list-functions --region ap-south-1'
+            // Parse JSON output to get LogResult
+            def jsonResult = readJSON text: result
+            def logResult = jsonResult.LogResult
 
-                    
-                    sh 'aws lambda invoke --function-name MyLambdaFunction --log-type Tail lambda_output.txt'
-
-                    sh 'cat lambda_output.txt | base64 --decode'
-                }
+            // Decode the Base64-encoded log result
+            def decodedLogs = sh(script: "echo ${logResult} | base64 --decode", returnStdout: true)
+            echo decodedLogs
+        }
             }
         }
     }
