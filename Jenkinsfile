@@ -46,7 +46,7 @@ pipeline {
                     
                     sh 'aws lambda invoke --function-name MyLambdaFunction --log-type Tail lambda_output.txt'
 
-                    //sh 'cat lambda_output.txt | base64 --decode'
+                    sh 'cat lambda_output.txt | base64 --decode'
                 }
             }
         }
