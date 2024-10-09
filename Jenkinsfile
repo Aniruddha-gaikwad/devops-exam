@@ -37,31 +37,18 @@ pipeline {
             }
         }
 
-       stage('Invoke Lambda') {
-       steps {
-           script {
-               def result = sh(script: '''
-                   set +x
-                   aws lambda invoke \
-                       --function-name my_lambda \
-                       --log-type Tail \
-                       --query 'LogResult' \
-                       --output text \
-                       lambda_output.txt | base64 --decode
-                   
-                   LAMBDA_STATUS=$?
-                   if [ $LAMBDA_STATUS -ne 0 ]; then
-                       echo "Lambda invocation failed with status: $LAMBDA_STATUS"
-                       exit 1
-                   fi
-                   
-                   cat lambda_output.txt
-               ''', returnStatus: true)     // test
-               
-               if (result != 0) {
-                   error "Lambda invocation failed. Check the logs for more details."
-               }
-           }
-       }
-   }
+      stage('Invoke Lambda') {
+            steps {
+                script {
 
+                    //sh 'aws lambda list-functions --region ap-south-1'
+
+                    
+                    sh 'aws lambda invoke --function-name MyLambdaFunction --log-type Tail lambda_output.txt'
+
+                    sh 'cat lambda_output.txt | base64 --decode'
+                }
+            }
+        }
+    }
+}

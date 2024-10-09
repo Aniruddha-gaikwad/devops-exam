@@ -48,7 +48,7 @@ resource "aws_security_group" "lambda_sg" {
 }
 
 resource "aws_lambda_function" "my_lambda" {
-  function_name = "MyLambdaFunction_${formatdate("YYYYMMDDhhmmss", timestamp())}" 
+  function_name = "MyLambdaFunction" 
   filename =  "./lambda_function.zip"
   handler       = "lambda_function.lambda_handler"  
   runtime       = "python3.8"  
