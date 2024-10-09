@@ -40,7 +40,7 @@ pipeline {
         stage('Invoke Lambda') {
             steps {
                 script {
-                    sh 'aws lambda invoke --function-name my_lambda_function --log-type Tail lambda_output.txt'
+                    sh 'aws lambda invoke --function-name my_lambda --log-type Tail lambda_output.txt'
                     sh 'cat lambda_output.txt | base64 --decode'
                 }
             }
