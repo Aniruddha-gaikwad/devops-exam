@@ -39,21 +39,24 @@ pipeline {
 
       stage('Invoke Lambda') {
             steps {
-                script {
-            // Invoke the Lambda function
-            def result = sh(script: 'aws lambda invoke --function-name MyLambdaFunction --log-type Tail lambda_output.txt --output json', returnStdout: true)
-            
-            // Print the result for debugging
-            echo result
+                     script {
+            // Invoke the Lambda function and store the output in a file
+            sh 'aws lambda invoke --function-name my_lambda --log-type Tail lambda_output.txt --output json'
 
-            // Parse JSON output to get LogResult
-            def jsonResult = readJSON text: result
-            def logResult = jsonResult.LogResult
+            // Read the output from the lambda_output.txt file
+            def jsonOutput = readFile('lambda_output.txt')
 
-            // Decode the Base64-encoded log result
-            def decodedLogs = sh(script: "echo ${logResult} | base64 --decode", returnStdout: true)
-            echo decodedLogs
-        }
+            // Extract the LogResult using jq
+            def logResult = sh(script: "echo '${jsonOutput}' | jq -r '.LogResult'", returnStdout: true).trim()
+
+            // Check if logResult is not empty
+            if (logResult) {
+                // Decode the Base64-encoded logs
+                def decodedLogs = sh(script: "echo ${logResult} | base64 --decode", returnStdout: true)
+                echo decodedLogs
+            } else {
+                echo "No logs available."
+            }
             }
         }
     }
