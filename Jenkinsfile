@@ -56,7 +56,7 @@ pipeline {
                    fi
                    
                    cat lambda_output.txt
-               ''', returnStatus: true)
+               ''', returnStatus: true)     // test
                
                if (result != 0) {
                    error "Lambda invocation failed. Check the logs for more details."
